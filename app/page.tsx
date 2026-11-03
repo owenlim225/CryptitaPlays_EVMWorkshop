@@ -62,6 +62,7 @@ export default function Home() {
   const [account, setAccount] = useState<string | null>(null);
   const [chainId, setChainId] = useState<string | null>(null);
   const [contractAddress, setContractAddress] = useState<string | null>(null);
+  const [contractInput, setContractInput] = useState("");
   const [notice, setNotice] = useState("");
   const [txHash, setTxHash] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -93,9 +94,12 @@ export default function Home() {
     let active = true;
     void (async () => {
       try {
-        const config = await responseJson(await fetch("/api/contract"));
+        const savedAddress = window.localStorage.getItem("workshopContractAddress");
+        const config = await responseJson(await fetch(savedAddress ? `/api/contract?address=${encodeURIComponent(savedAddress)}` : "/api/contract"));
+        if (!config.address) throw new Error(savedAddress ? "Saved contract is not a supported workshop NFT. Choose another address below." : "Default contract is unavailable.");
         if (active) {
           setContractAddress(config.address);
+          setContractInput(savedAddress ?? "");
           if (config.counter !== null) setQuantity(config.counter);
         }
       } catch (error) {
@@ -104,6 +108,44 @@ export default function Home() {
     })();
     return () => { active = false; };
   }, []);
+
+  async function selectContract() {
+    setBusy(true);
+    setNotice("");
+    setContractAddress(null);
+    setTxHash(null);
+    try {
+      const config = await responseJson(await fetch(`/api/contract?address=${encodeURIComponent(contractInput.trim())}`));
+      if (!config.address) throw new Error("No supported workshop NFT found at that Base Sepolia address.");
+      setContractAddress(config.address);
+      setQuantity(config.counter);
+      window.localStorage.setItem("workshopContractAddress", config.address);
+      setNotice("Workshop contract selected.");
+    } catch (error) {
+      setNotice(errorMessage(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function useDefaultContract() {
+    setBusy(true);
+    setNotice("");
+    try {
+      const config = await responseJson(await fetch("/api/contract"));
+      if (!config.address) throw new Error("Default contract is unavailable.");
+      setContractAddress(config.address);
+      setContractInput("");
+      setQuantity(config.counter);
+      setTxHash(null);
+      window.localStorage.removeItem("workshopContractAddress");
+      setNotice("Default contract selected.");
+    } catch (error) {
+      setNotice(errorMessage(error));
+    } finally {
+      setBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!provider) return;
@@ -259,6 +301,15 @@ export default function Home() {
             <p>Connect MetaMask, set the shared on-chain counter, and mint that many passes on Base Sepolia.</p>
             {account && chainId !== CHAIN_ID && <p className="network-note">MetaMask will ask you to switch to Base Sepolia.</p>}
           </div>
+
+          <form className="contract-selector" onSubmit={(event) => { event.preventDefault(); void selectContract(); }}>
+            <label htmlFor="contract-address">Your workshop contract address</label>
+            <div className="contract-selector-controls">
+              <input id="contract-address" type="text" value={contractInput} onChange={(event) => { setContractInput(event.target.value); setContractAddress(null); setTxHash(null); setNotice(""); }} placeholder="0x… from the deployment output" autoComplete="off" spellCheck={false} />
+              <button type="submit" disabled={busy || !contractInput.trim()}>Use contract</button>
+              <button type="button" onClick={useDefaultContract} disabled={busy}>Use default</button>
+            </div>
+          </form>
 
           <div className="mint-form">
             <div className="quantity-side">

@@ -34,6 +34,13 @@ button:disabled { cursor: not-allowed; opacity: .65; }
 .intro { max-width: 760px; }
 h1 { margin: 0; font-size: clamp(44px, 6vw, 76px); font-weight: 500; line-height: 1.05; letter-spacing: -.04em; text-wrap: balance; }
 .intro p { margin: 24px 0 0; color: var(--muted); font-size: 18px; line-height: 1.5; }
+.contract-selector { margin-top: 48px; }
+.contract-selector label { display: block; margin-bottom: 10px; font-size: 15px; font-weight: 600; }
+.contract-selector-controls { display: flex; gap: 10px; }
+.contract-selector input { flex: 1; min-width: 0; padding: 11px 13px; border: 1px solid var(--line); background: #fff; color: var(--text); font: inherit; }
+.contract-selector input:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
+.contract-selector button { padding: 11px 15px; border: 1px solid var(--violet); background: #fff; color: var(--violet); cursor: pointer; white-space: nowrap; }
+.contract-selector button:hover:not(:disabled) { background: var(--violet-soft); }
 
 .mint-form { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: clamp(64px, 11vh, 100px); padding-top: 28px; border-top: 1px solid var(--line); }
 .field-heading { display: flex; align-items: center; justify-content: space-between; min-height: 24px; margin-bottom: 14px; font-size: 15px; font-weight: 600; }
@@ -66,6 +73,8 @@ h1 { margin: 0; font-size: clamp(44px, 6vw, 76px); font-weight: 500; line-height
   .mint-page { padding: 78px 0 70px; }
   h1 { font-size: clamp(43px, 10vw, 58px); }
   .intro p { margin-top: 20px; font-size: 16px; }
+  .contract-selector-controls { flex-wrap: wrap; }
+  .contract-selector input { flex-basis: 100%; }
   .mint-form { grid-template-columns: 1fr; gap: 28px; margin-top: 70px; }
 }
 

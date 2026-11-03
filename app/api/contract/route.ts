@@ -1,15 +1,19 @@
 import { createPublicClient, encodeFunctionData, http, isAddress, keccak256, type Abi, type Address } from "viem";
 import { baseSepolia } from "viem/chains";
 import artifact from "@/contracts/NFTA.json";
+import workshopArtifact from "@/contracts/WorkshopNFT.json";
 
 const client = createPublicClient({ chain: baseSepolia, transport: http(process.env.BASE_SEPOLIA_RPC_URL) });
 const abi = artifact.abi as Abi;
-const deployedCodeHash = keccak256(artifact.deployedBytecode as `0x${string}`);
+const deployedCodeHashes = new Set([
+  keccak256(artifact.deployedBytecode as `0x${string}`),
+  keccak256(workshopArtifact.deployedBytecode as `0x${string}`),
+]);
 const defaultAddress = process.env.NFT_CONTRACT_ADDRESS || "0x288ad5fd9f3bd8b82580a1e723ec1747532e981d";
 
 async function isCurrentContract(address: Address) {
   const code = await client.getBytecode({ address });
-  return !!code && keccak256(code) === deployedCodeHash;
+  return !!code && deployedCodeHashes.has(keccak256(code));
 }
 
 export async function GET(request: Request) {

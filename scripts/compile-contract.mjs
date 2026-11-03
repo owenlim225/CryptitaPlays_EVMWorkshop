@@ -5,10 +5,10 @@ import { resolve } from "node:path";
 const require = createRequire(import.meta.url);
 const solc = require("solc");
 const root = resolve(import.meta.dirname, "..");
-const source = "contracts/NFTA.sol";
+const sources = ["contracts/NFTA.sol", "contracts/WorkshopNFT.sol"];
 const input = {
   language: "Solidity",
-  sources: { [source]: { content: readFileSync(resolve(root, source), "utf8") } },
+  sources: Object.fromEntries(sources.map((source) => [source, { content: readFileSync(resolve(root, source), "utf8") }])),
   settings: {
     optimizer: { enabled: true, runs: 200 },
     outputSelection: { "*": { "*": ["abi", "evm.bytecode.object", "evm.deployedBytecode.object"] } },
@@ -28,10 +28,12 @@ for (const error of output.errors ?? []) {
   if (error.severity === "error") throw new Error(error.formattedMessage);
 }
 
-const contract = output.contracts[source].MyNFT;
-writeFileSync(resolve(root, "contracts/NFTA.json"), JSON.stringify({
-  abi: contract.abi,
-  bytecode: `0x${contract.evm.bytecode.object}`,
-  deployedBytecode: `0x${contract.evm.deployedBytecode.object}`,
-}, null, 2) + "\n");
-console.log("Compiled MyNFT for Base Sepolia deployment.");
+for (const [source, name] of [["contracts/NFTA.sol", "MyNFT"], ["contracts/WorkshopNFT.sol", "WorkshopNFT"]]) {
+  const contract = output.contracts[source][name];
+  writeFileSync(resolve(root, source.replace(/\.sol$/, ".json")), JSON.stringify({
+    abi: contract.abi,
+    bytecode: `0x${contract.evm.bytecode.object}`,
+    deployedBytecode: `0x${contract.evm.deployedBytecode.object}`,
+  }, null, 2) + "\n");
+}
+console.log("Compiled MyNFT and WorkshopNFT.");
