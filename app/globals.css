@@ -23,6 +23,11 @@ button:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
 .site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 92px; border-bottom: 1px solid var(--line); }
 .brand-logo { display: block; width: 224px; height: auto; }
 .header-label { color: var(--muted); font-size: 14px; }
+.header-actions { display: flex; align-items: center; gap: 20px; }
+.wallet-button { padding: 11px 16px; border: 1px solid var(--violet); background: #fff; color: var(--violet); cursor: pointer; font-size: 14px; font-weight: 600; }
+.wallet-button:hover:not(:disabled) { background: var(--violet-soft); }
+.network-note { font-size: 14px !important; }
+button:disabled { cursor: not-allowed; opacity: .65; }
 
 .mint-page { flex: 1; padding: clamp(72px, 13vh, 148px) 0 80px; }
 .intro { max-width: 760px; }
@@ -41,8 +46,11 @@ h1 { margin: 0; font-size: clamp(44px, 6vw, 76px); font-weight: 500; line-height
 .quantity-control output { display: grid; place-items: center; font-size: 25px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .mint-button { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 68px; padding: 0 24px; border: 1px solid var(--violet); background: var(--violet); color: #fff; cursor: pointer; font-size: 19px; font-weight: 600; transition: background .15s ease, color .15s ease; }
 .mint-button:hover { background: var(--violet-hover); border-color: var(--violet-hover); }
+.mint-button:disabled { background: var(--muted); border-color: var(--muted); }
 .mint-button svg { width: 24px; height: 24px; }
 .preview-note { margin: 20px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.contract-note, .transaction-note { overflow-wrap: anywhere; font-size: 13px; }
+.contract-note a, .transaction-note a { color: var(--violet); }
 .mint-notice { margin: 28px 0 0; padding: 16px 18px; border: 1px solid var(--line); background: var(--violet-soft); font-size: 14px; line-height: 1.5; }
 .site-footer { padding: 23px 0 29px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
 
@@ -51,6 +59,8 @@ h1 { margin: 0; font-size: clamp(44px, 6vw, 76px); font-weight: 500; line-height
   .site-header { min-height: 76px; }
   .brand-logo { width: 174px; }
   .header-label { font-size: 12px; }
+  .header-actions { flex-direction: column; align-items: flex-end; gap: 6px; }
+  .wallet-button { padding: 8px 10px; font-size: 12px; }
   .mint-page { padding: 78px 0 70px; }
   h1 { font-size: clamp(43px, 10vw, 58px); }
   .intro p { margin-top: 20px; font-size: 16px; }

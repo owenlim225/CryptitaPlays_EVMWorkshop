@@ -6,12 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "compile:contract": "node scripts/compile-contract.mjs"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^5.6.1",
     "next": "16.4.5",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "viem": "^2.57.16"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
@@ -20,6 +23,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "solc": "^0.8.28",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
