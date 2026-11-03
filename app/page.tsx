@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 const MIN_QUANTITY = 1;
@@ -22,7 +23,7 @@ export default function Home() {
     <main className="site-shell">
       <div className="page-wrap">
         <header className="site-header">
-          <span className="brand">Cryptita Plays</span>
+          <Image className="brand-logo" src="/cryptita-logo.png" alt="Cryptita Plays" width={2902} height={857} priority unoptimized />
           <span className="header-label">EVM Workshop</span>
         </header>
 

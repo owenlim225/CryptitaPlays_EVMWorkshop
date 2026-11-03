@@ -2,23 +2,26 @@
 
 :root {
   color-scheme: light;
-  --text: #171917;
-  --muted: #626761;
-  --line: #d9ddd7;
-  --surface: #f8f9f6;
+  --text: #24182d;
+  --muted: #665a70;
+  --line: #e3d9eb;
+  --surface: #fbf8fd;
+  --violet: #8617cc;
+  --violet-hover: #6f0fac;
+  --violet-soft: #f3e8fa;
 }
 
 * { box-sizing: border-box; }
 html { min-width: 320px; }
 body { margin: 0; background: var(--surface); color: var(--text); font-family: "Space Grotesk", Arial, sans-serif; }
 button { font: inherit; }
-button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-::selection { background: #dfe8d7; color: var(--text); }
+button:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
+::selection { background: #e9d2f7; color: var(--text); }
 
 .site-shell { min-height: 100svh; }
 .page-wrap { display: flex; flex-direction: column; width: min(100% - 64px, 1060px); min-height: 100svh; margin: 0 auto; }
-.site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 78px; border-bottom: 1px solid var(--line); }
-.brand { font-size: 17px; font-weight: 700; letter-spacing: -.02em; }
+.site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 92px; border-bottom: 1px solid var(--line); }
+.brand-logo { display: block; width: 224px; height: auto; }
 .header-label { color: var(--muted); font-size: 14px; }
 
 .mint-page { flex: 1; padding: clamp(72px, 13vh, 148px) 0 80px; }
@@ -33,20 +36,20 @@ h1 { margin: 0; font-size: clamp(44px, 6vw, 76px); font-weight: 500; line-height
 .quantity-control button { border: 0; background: transparent; color: var(--text); cursor: pointer; font-size: 28px; line-height: 1; transition: background .15s ease; }
 .quantity-control button:first-child { border-right: 1px solid var(--line); }
 .quantity-control button:last-child { border-left: 1px solid var(--line); }
-.quantity-control button:hover:not(:disabled) { background: #eff1ed; }
-.quantity-control button:disabled { color: #a9aea8; cursor: not-allowed; }
+.quantity-control button:hover:not(:disabled) { background: var(--violet-soft); color: var(--violet); }
+.quantity-control button:disabled { color: #ada4b4; cursor: not-allowed; }
 .quantity-control output { display: grid; place-items: center; font-size: 25px; font-weight: 500; font-variant-numeric: tabular-nums; }
-.mint-button { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 68px; padding: 0 24px; border: 1px solid var(--text); background: var(--text); color: #fff; cursor: pointer; font-size: 19px; font-weight: 600; transition: background .15s ease, color .15s ease; }
-.mint-button:hover { background: #353a35; }
+.mint-button { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 68px; padding: 0 24px; border: 1px solid var(--violet); background: var(--violet); color: #fff; cursor: pointer; font-size: 19px; font-weight: 600; transition: background .15s ease, color .15s ease; }
+.mint-button:hover { background: var(--violet-hover); border-color: var(--violet-hover); }
 .mint-button svg { width: 24px; height: 24px; }
 .preview-note { margin: 20px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
-.mint-notice { margin: 28px 0 0; padding: 16px 18px; border: 1px solid var(--line); background: #eef1eb; font-size: 14px; line-height: 1.5; }
+.mint-notice { margin: 28px 0 0; padding: 16px 18px; border: 1px solid var(--line); background: var(--violet-soft); font-size: 14px; line-height: 1.5; }
 .site-footer { padding: 23px 0 29px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
 
 @media (max-width: 700px) {
   .page-wrap { width: min(100% - 40px, 520px); }
-  .site-header { min-height: 68px; }
-  .brand { font-size: 15px; }
+  .site-header { min-height: 76px; }
+  .brand-logo { width: 174px; }
   .header-label { font-size: 12px; }
   .mint-page { padding: 78px 0 70px; }
   h1 { font-size: clamp(43px, 10vw, 58px); }
