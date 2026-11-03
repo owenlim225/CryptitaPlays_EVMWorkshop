@@ -2,13 +2,13 @@
 pragma solidity ^0.8.28;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MyNFT is ERC721URIStorage, Ownable {
+contract MyNFT is ERC721URIStorage {
     uint256 public tokenId;
+    uint public counter = 1;
     string private constant TOKEN_URI = "https://ivory-additional-snail-831.mypinata.cloud/ipfs/bafkreibc7d3vnc24vsg3inh6s6qh6d2xlfhd62fexxt3n5pxtuoshsk7be";
 
-    constructor() ERC721("Sherwaskjdakjsdinz", "SHER") Ownable(msg.sender) {}
+    constructor() ERC721("Sherwaskjdakjsdinz", "SHER") {}
 
     function mint() external {
         _mintOne();
@@ -21,14 +21,14 @@ contract MyNFT is ERC721URIStorage, Ownable {
         }
     }
 
-    function increment() external onlyOwner {
-        tokenId++;
+    function increment() external {
+        require(counter < 10, "Counter is already ten");
+        counter++;
     }
 
-    function decrement() external onlyOwner {
-        require(tokenId > 0, "Token ID is already zero");
-        require(_ownerOf(tokenId - 1) == address(0), "Token ID already minted");
-        tokenId--;
+    function decrement() external {
+        require(counter > 1, "Counter is already one");
+        counter--;
     }
 
     function _mintOne() private {

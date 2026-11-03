@@ -24,6 +24,7 @@ button:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
 .brand-logo { display: block; width: 224px; height: auto; }
 .header-label { color: var(--muted); font-size: 14px; }
 .header-actions { display: flex; align-items: center; gap: 20px; }
+.wallet-account { color: var(--muted); font-size: 14px; white-space: nowrap; }
 .wallet-button { padding: 11px 16px; border: 1px solid var(--violet); background: #fff; color: var(--violet); cursor: pointer; font-size: 14px; font-weight: 600; }
 .wallet-button:hover:not(:disabled) { background: var(--violet-soft); }
 .network-note { font-size: 14px !important; }
@@ -56,10 +57,11 @@ h1 { margin: 0; font-size: clamp(44px, 6vw, 76px); font-weight: 500; line-height
 
 @media (max-width: 700px) {
   .page-wrap { width: min(100% - 40px, 520px); }
-  .site-header { min-height: 76px; }
-  .brand-logo { width: 174px; }
+  .site-header { min-height: 76px; gap: 12px; }
+  .brand-logo { width: 150px; }
   .header-label { font-size: 12px; }
   .header-actions { flex-direction: column; align-items: flex-end; gap: 6px; }
+  .wallet-account { font-size: 12px; }
   .wallet-button { padding: 8px 10px; font-size: 12px; }
   .mint-page { padding: 78px 0 70px; }
   h1 { font-size: clamp(43px, 10vw, 58px); }
