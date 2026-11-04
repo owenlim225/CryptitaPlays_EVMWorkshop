@@ -90,13 +90,13 @@ The contract stores the metadata URI at deployment. To use a different metadata 
 
 ### 7. Mint on the workshop page
 
-1. Run `npm run dev` and open [http://localhost:3000](http://localhost:3000).
-2. Paste **your contract address** into **Your workshop contract address** and click **Use contract**. Do not paste a Pinata link or a transaction hash there. The page checks that this is a supported workshop NFT contract on Base Sepolia.
+1. Add `NFT_CONTRACT_ADDRESS=0xYOUR_DEPLOYED_CONTRACT_ADDRESS` to `.env.local`, using the address printed in step 6. The page uses this contract when the server starts.
+2. Run `npm run dev` and open [http://localhost:3000](http://localhost:3000). Check the contract link on the page before minting.
 3. Click **Connect MetaMask**. Use the same funded test wallet and approve the Base Sepolia network switch if asked.
 4. Leave the counter at `1` for one NFT, or use `+`/`−` to change it. Each counter change is its own transaction and costs test ETH for gas. The counter is shared by everyone using your contract.
 5. Click **Mint**, review the MetaMask transaction, and confirm it. Open the transaction link shown on the page to see the confirmed mint on BaseScan.
 
-The page remembers the address on this browser. **Use default** returns to the project's shared demo contract. Your contract has its own counter and NFTs. If your NFT image does not appear in a wallet immediately, first reopen the metadata file in Pinata and confirm its `image` CID is correct.
+Your contract has its own counter and NFTs. If your NFT image does not appear in a wallet immediately, first reopen the metadata file in Pinata and confirm its `image` CID is correct.
 
 ### What changed from the predecessor workshop
 
@@ -106,7 +106,7 @@ The page remembers the address on this browser. **Use default** returns to the p
 | Copy an existing NFT's JSON from a Solidity link | Create your own `metadata.json` and upload it after the image. |
 | Paste Pinata gateway links into code | Use `ipfs://IMAGE_CID` in JSON, then deploy with `ipfs://METADATA_CID`. |
 | Run `npx hardhat ... --network sepolia` | Run this project's `compile:contract` and `deploy:workshop` commands on **Base Sepolia**. |
-| Import ABI into `abi.ninja` to mint | Select your contract on this project's mint page. |
+| Import ABI into `abi.ninja` to mint | Configure your contract in `.env.local`, then use this project's mint page. |
 
 References: [Pinata's file upload guide](https://pinata.cloud/blog/how-to-use-pinata-a-step-by-step-guide-for-beginners/), [Pinata's NFT metadata guide](https://knowledge.pinata.cloud/en/articles/5455523-nfts-and-pinata), and [Base Sepolia chain ID](https://docs.base.org/base-chain/api-reference/ethereum-json-rpc-api/eth_chainId).
 
@@ -121,7 +121,7 @@ Open http://localhost:3000.
 
 Connect MetaMask. The `+` and `−` buttons call `increment()` and `decrement()` on-chain, then **Mint** mints the displayed number of passes. Every action needs Base Sepolia test ETH for gas.
 
-The [updated contract](https://sepolia.basescan.org/address/0x288ad5fd9f3bd8b82580a1e723ec1747532e981d) is the default across browsers. Participants can paste their deployed `WorkshopNFT` address into the page; that choice is saved in their browser. Set `NFT_CONTRACT_ADDRESS` in `.env.local` only to change the server's default and restart the server. `BASE_SEPOLIA_RPC_URL` optionally overrides the public Base Sepolia RPC used for backend checks.
+The [updated contract](https://sepolia.basescan.org/address/0x288ad5fd9f3bd8b82580a1e723ec1747532e981d) is the default across browsers. Set `NFT_CONTRACT_ADDRESS` in `.env.local` to use your deployed `WorkshopNFT` instead, then restart the server. `BASE_SEPOLIA_RPC_URL` optionally overrides the public Base Sepolia RPC used for backend checks.
 
 The backend checks that the address contains either the original contract's or the participant contract's compiled code and simulates `mint(quantity)` before returning transaction data. MetaMask signs and broadcasts mint transactions; the server never handles a private key. The terminal deployment script reads a test-wallet key from the ignored `.env.local` file. Contract sources and artifacts are in `contracts/`. After editing Solidity source, run `npm run compile:contract` and redeploy; existing contracts cannot be updated in place.
 
