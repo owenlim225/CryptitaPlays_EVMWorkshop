@@ -4,10 +4,16 @@ Create NFT metadata on Pinata, put its JSON link in the `MyNFT` smart contract, 
 
 ## Before you start
 
-- Install Node.js 22.13 or newer, Git, VS Code, and the MetaMask browser extension.
+- Install Node.js 22.13 or newer, Git, and VS Code.
 - Sign in to [Pinata](https://app.pinata.cloud/).
-- Use a **test wallet** with **Base Sepolia ETH** for deployment and mint gas. Ask your facilitator or use a [Base Sepolia faucet](https://www.coinbase.com/developer-platform/products/faucet). Ethereum Sepolia ETH is on a different network.
-- Select **Base Sepolia** in MetaMask. Its chain ID is `84532` (`0x14a34`). The mint page can ask MetaMask to add or switch to this network.
+
+## Set up MetaMask and receive Base Sepolia test ETH
+
+1. Go to the [official MetaMask site](https://metamask.io/), choose your browser, and install the MetaMask extension from its browser's extension store. Open the extension and select **Create a new wallet**. Follow the prompts to set a password and secure the wallet. If you choose a **12-word Secret Recovery Phrase**, write the words in order and keep them private and offline. Anyone with those words can control your wallet; never give them to a facilitator, enter them into a website, or put them in a QR code. See MetaMask's [installation](https://support.metamask.io/hc/en-us/articles/360015489531) and [wallet creation](https://support.metamask.io/start/creating-a-new-wallet) guides.
+2. In MetaMask, open **Networks** (or **Network** > **Manage networks**), turn on **Show test networks** if needed, and choose **Add a custom network** > **Add from Chainlist** if that option appears. Search for **Base Sepolia**, select it, and approve or **Save** the network in MetaMask. If your version does not show **Add from Chainlist**, follow MetaMask's [Chainlist instructions](https://support.metamask.io/configure/networks/how-to-add-a-custom-network-rpc) from the official [Chainlist site](https://chainid.network/). Check that the network is **Base Sepolia**, with chain ID `84532` (`0x14a34`), rather than Base Mainnet or Ethereum Sepolia.
+3. Back on MetaMask's **Tokens** tab, open the **Enabled networks** or selected-network filter and select **Base Sepolia** so its test ETH balance is visible. Adding a network and including it in this asset filter are separate steps. See MetaMask's [network filter guide](https://support.metamask.io/configure/networks/how-to-change-networks).
+4. Click your account's **Ethereum/EVM public address** in MetaMask to copy it. It should start with `0x`. Paste it into the **Text** option at [QR Code Generator](https://www.qr-code-generator.com/) to create a static QR code. Scan the code yourself and compare the full decoded address with MetaMask before showing the QR code and address to a live facilitator. Share only this public address, never your recovery phrase or private key. See MetaMask's [address guide](https://support.metamask.io/configure/wallet/how-to-copy-your-metamask-account-public-address-/) and the generator's [static QR code guide](https://support.qr-code-generator.com/hc/en-us/articles/7664248839053-How-can-I-create-a-Static-QR-Code-without-an-account).
+5. Ask the facilitator to send **Base Sepolia test ETH** to that address, or use a [Base Sepolia faucet](https://www.coinbase.com/developer-platform/products/faucet). Confirm with the facilitator that they are sending on **Base Sepolia**. Wait for the balance to appear in MetaMask before deploying or minting. Ethereum Sepolia ETH is on a different network; testnet ETH has no real-world value.
 
 ## 1. Open the project in VS Code
 
