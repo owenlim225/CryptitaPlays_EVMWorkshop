@@ -9,7 +9,7 @@ const deployedCodeHashes = new Set([
   keccak256(artifact.deployedBytecode as `0x${string}`),
   keccak256(workshopArtifact.deployedBytecode as `0x${string}`),
 ]);
-const defaultAddress = process.env.NFT_CONTRACT_ADDRESS || "0x288ad5fd9f3bd8b82580a1e723ec1747532e981d";
+const defaultAddress = process.env.NFT_CONTRACT_ADDRESS || "0xd488d90944c04e69da124a02d3b513a208b8ed29";
 
 async function isCurrentContract(address: Address) {
   const code = await client.getBytecode({ address });

@@ -15,7 +15,7 @@
 html { min-width: 320px; }
 body { margin: 0; background: var(--surface); color: var(--text); font-family: "Space Grotesk", Arial, sans-serif; }
 button { font: inherit; }
-button:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
+button:focus-visible, .github-button:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
 ::selection { background: #e9d2f7; color: var(--text); }
 
 .site-shell { min-height: 100svh; }
@@ -23,7 +23,10 @@ button:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
 .site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 92px; border-bottom: 1px solid var(--line); }
 .brand-logo { display: block; width: 224px; height: auto; }
 .header-label { color: var(--muted); font-size: 14px; }
-.header-actions { display: flex; align-items: center; gap: 20px; }
+.header-actions { display: flex; align-items: center; gap: 12px; }
+.github-button { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid var(--violet); background: #fff; color: var(--violet); }
+.github-button:hover { background: var(--violet-soft); }
+.github-button svg { width: 22px; height: 22px; }
 .wallet-account { color: var(--muted); font-size: 14px; white-space: nowrap; }
 .wallet-button { padding: 11px 16px; border: 1px solid var(--violet); background: #fff; color: var(--violet); cursor: pointer; font-size: 14px; font-weight: 600; }
 .wallet-button:hover:not(:disabled) { background: var(--violet-soft); }

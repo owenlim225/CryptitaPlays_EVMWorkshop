@@ -24,7 +24,7 @@ npm ci
 code .
 ```
 
-You can use the VS Code terminal for the remaining commands. This repository uses Next.js and `solc`; the predecessor workshop's Hardhat command does not apply here.
+You can use the VS Code terminal for the remaining commands. The workshop deployment below uses `solc` and `viem`. An optional Hardhat workflow for `MyNFT` is described after the workshop steps.
 
 ### 2. Upload your image to Pinata
 
@@ -121,8 +121,25 @@ Open http://localhost:3000.
 
 Connect MetaMask. The `+` and `−` buttons call `increment()` and `decrement()` on-chain, then **Mint** mints the displayed number of passes. Every action needs Base Sepolia test ETH for gas.
 
-The [updated contract](https://sepolia.basescan.org/address/0x288ad5fd9f3bd8b82580a1e723ec1747532e981d) is the default across browsers. Set `NFT_CONTRACT_ADDRESS` in `.env.local` to use your deployed `WorkshopNFT` instead, then restart the server. `BASE_SEPOLIA_RPC_URL` optionally overrides the public Base Sepolia RPC used for backend checks.
+The [workshop contract](https://sepolia.basescan.org/address/0xd488d90944c04e69da124a02d3b513a208b8ed29) is the default across browsers. Set `NFT_CONTRACT_ADDRESS` in `.env.local` to use another deployed `WorkshopNFT` instead, then restart the server. `BASE_SEPOLIA_RPC_URL` optionally overrides the public Base Sepolia RPC used for backend checks.
 
 The backend checks that the address contains either the original contract's or the participant contract's compiled code and simulates `mint(quantity)` before returning transaction data. MetaMask signs and broadcasts mint transactions; the server never handles a private key. The terminal deployment script reads a test-wallet key from the ignored `.env.local` file. Contract sources and artifacts are in `contracts/`. After editing Solidity source, run `npm run compile:contract` and redeploy; existing contracts cannot be updated in place.
 
 The `counter` starts at 1, is shared across wallets, and is limited to 1–10 to match the mint quantity. Any wallet can change it or mint. There is no mint fee, though network gas still applies.
+
+## Optional Hardhat workflow for MyNFT
+
+Hardhat is already configured in this repository; do not run `hardhat init`. Hardhat 3 requires Node.js 22.13 or newer. To compile the contracts and test deployment on a simulated chain:
+
+```bash
+npx hardhat build
+npx hardhat run scripts/deploy.ts
+```
+
+To start a local JSON-RPC node, run `npx hardhat node` in a separate terminal. To deploy `MyNFT` to **Base Sepolia**, put `BASE_SEPOLIA_PRIVATE_KEY=0x...` in the ignored `.env.local` file, then run:
+
+```bash
+npx hardhat run scripts/deploy.ts --network baseSepolia
+```
+
+The network name is `baseSepolia`, not `sepolia`. `MyNFT` is a separate contract from the participant `WorkshopNFT` used by the mint page. For the page workflow, use `npm run deploy:workshop -- ipfs://METADATA_CID` as described above.

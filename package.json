@@ -2,6 +2,7 @@
   "name": "cryptitaplays_evmworkshop",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -18,12 +19,14 @@
     "viem": "^2.57.16"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-viem": "^3.1.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "hardhat": "^3.21.2",
     "solc": "^0.8.28",
     "tailwindcss": "^4",
     "typescript": "^5"

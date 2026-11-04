@@ -13,6 +13,8 @@
 
 # testing
 /coverage
+/artifacts/
+/cache/
 
 # next.js
 /.next/
