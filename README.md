@@ -1,21 +1,17 @@
 # Cryptita Plays EVM Workshop
 
-A Base Sepolia NFT mint page built with Next.js 16, React 19, MetaMask, and an ERC-721 contract.
+Create NFT metadata on Pinata, put its JSON link in the `MyNFT` smart contract, deploy to **Base Sepolia**, and mint from this Next.js page. Upload the **image first** and the **JSON file second**: the JSON needs the image link, and the contract needs the JSON link.
 
-## NFT creation workshop: Pinata to Base Sepolia
+## Before you start
 
-In this workshop, you will upload an image and NFT metadata to Pinata, deploy your own NFT contract on **Base Sepolia**, then mint through this project's web page. The image and metadata are two separate uploads. Save both CIDs.
+- Install Node.js 22.13 or newer, Git, VS Code, and the MetaMask browser extension.
+- Sign in to [Pinata](https://app.pinata.cloud/).
+- Use a **test wallet** with **Base Sepolia ETH** for deployment and mint gas. Ask your facilitator or use a [Base Sepolia faucet](https://www.coinbase.com/developer-platform/products/faucet). Ethereum Sepolia ETH is on a different network.
+- Select **Base Sepolia** in MetaMask. Its chain ID is `84532` (`0x14a34`). The mint page can ask MetaMask to add or switch to this network.
 
-### Before you start
+## 1. Open the project in VS Code
 
-- Install Node.js 20.9 or newer, Git, VS Code, and the MetaMask browser extension.
-- Create or sign in to a [Pinata account](https://app.pinata.cloud/).
-- Use a **test wallet** in MetaMask and get **Base Sepolia ETH** for deployment and mint gas. Ask a facilitator or use the [Coinbase Developer Platform faucet](https://www.coinbase.com/developer-platform/products/faucet). Ethereum Sepolia ETH is on a different network.
-- Select **Base Sepolia** in MetaMask. Its chain ID is `84532` (`0x14a34`). The project can prompt MetaMask to add or switch to it when minting.
-
-### 1. Get the project ready
-
-Open a terminal in the folder where you keep projects:
+In a terminal, run:
 
 ```bash
 git clone https://github.com/owenlim225/CryptitaPlays_EVMWorkshop.git
@@ -24,122 +20,122 @@ npm ci
 code .
 ```
 
-You can use the VS Code terminal for the remaining commands. The workshop deployment below uses `solc` and `viem`. An optional Hardhat workflow for `MyNFT` is described after the workshop steps.
+Use the VS Code terminal for the remaining commands. If you already have the project, open its folder and run `npm ci`.
 
-### 2. Upload your image to Pinata
+## 2. Upload your image to Pinata
 
-1. Prepare one image you are allowed to publish (for example, `my-pass.png`). Anyone with the CID can retrieve a public IPFS upload.
-2. Open [Pinata Files](https://app.pinata.cloud/ipfs/files). Choose the file upload action (the button may say **Add** or **Upload**), select your image, and wait until the upload finishes.
-3. Copy the image's **CID** from its file row or details. A CID is the content identifier, not the display name or the entire gateway link. Write it down as `IMAGE_CID`.
-4. Click the uploaded file to check that the image opens. Its gateway URL will look like `https://YOUR_GATEWAY.mypinata.cloud/ipfs/IMAGE_CID`.
+1. Choose an image you are allowed to publish, such as `my-nft.png`.
+2. In [Pinata Files](https://app.pinata.cloud/ipfs/files), upload the image as a **public IPFS file**. Wait for the upload to finish.
+3. Copy its public gateway link. It should look like `https://YOUR_GATEWAY.mypinata.cloud/ipfs/IMAGE_CID`. Open the link in a browser to confirm it displays the image.
 
-### 3. Create the NFT metadata file
+Keep this **image link** handy. It goes in the JSON file, not in the smart contract.
 
-In VS Code, create `metadata.json` in your own working folder. Paste this JSON and replace the sample words and `IMAGE_CID`:
+## 3. Create the JSON metadata file
+
+In VS Code, create a file named `metadata.json`. Paste valid JSON like this, then replace the example values and the `image` link with your own:
 
 ```json
 {
-  "name": "My Workshop Pass",
-  "description": "An NFT made during the Cryptita Plays EVM workshop.",
-  "image": "ipfs://IMAGE_CID"
+  "name": "MARSU1142026",
+  "description": "Marinduque State University 2026",
+  "symbol": "MAR",
+  "image": "https://moccasin-impressive-cougar-51.mypinata.cloud/ipfs/bafybeidzjuczy43igklykwiy4vgpf7paqivhf63cvnxikyeocqn2lzdxiu",
+  "attributes": [
+    { "trait_type": "ilanMgaPogi", "value": "MaramiDaw" },
+    { "trait_type": "pogi level", "value": "Sagad" },
+    { "trait_type": "era", "value": "panahon ng mga pogi" },
+    {
+      "trait_type": "ManifestFile",
+      "value": "https://ivory-additional-snail-831.mypinata.cloud/ipfs/bafkreidawkpo4rxopssxmwxs36fajd5vwh7z63k6mdxxlbkb4dby7re6ru"
+    }
+  ]
 }
 ```
 
-Keep the double quotes and commas. The `image` value should use the image **CID**, with `ipfs://` in front. Do not paste the Pinata dashboard URL into this field. Save the file with a real `.json` extension, not `.json.txt`.
+The `ManifestFile` attribute is optional. If you do not have a manifest, delete that attribute and the comma after the `era` attribute. Keep the file as plain JSON: use normal double quotes, `https://` without a backslash, and the `.json` extension (not `.json.txt`). The JSON `symbol` is metadata; the collection name and symbol shown by the contract come from its constructor in step 5.
 
-For this workshop, every NFT minted from your contract will use this same metadata file and image.
+## 4. Upload the JSON to Pinata and copy its link
 
-### 4. Upload the metadata file to Pinata
-
-1. Return to [Pinata Files](https://app.pinata.cloud/ipfs/files). Upload **`metadata.json`** as a second file.
-2. Copy its new **CID** and write it down as `METADATA_CID`. It will differ from `IMAGE_CID`.
-3. Open the uploaded JSON through Pinata's gateway. Check that it shows your `name`, `description`, and `image` with the **image CID**. If you fix the JSON and upload it again, use the **new metadata CID** in the next step; IPFS content does not change under an old CID.
-
-Your two pointers should now be:
-
-```text
-Image in metadata:       ipfs://IMAGE_CID
-Contract metadata URI:   ipfs://METADATA_CID
-```
-
-### 5. Prepare your deployment wallet
-
-This terminal deployment uses a private key, as in the predecessor workshop. Use only your test wallet. **Never paste the key into chat, commit it, or send it to a facilitator.**
-
-1. In MetaMask, select the test account you funded on **Base Sepolia**. Use its account menu to reveal/export its private key and enter your MetaMask password when asked. Copy the key privately.
-2. In the repository root, create a file named `.env.local` in VS Code. Add this line with your own key, including `0x`:
+1. Return to [Pinata Files](https://app.pinata.cloud/ipfs/files) and upload `metadata.json` as a **second public IPFS file**.
+2. Copy the **JSON file's public gateway link**, not the image link or the Pinata dashboard URL. For example:
 
    ```text
-   BASE_SEPOLIA_PRIVATE_KEY=0xYOUR_64_HEX_CHARACTER_PRIVATE_KEY
+   https://moccasin-impressive-cougar-51.mypinata.cloud/ipfs/bafkreifgui54qw2qqcg3rlo3lojlpd7ofv5azrmbhmdqtnc5fjihat7snm
    ```
 
-3. Save the file. The repository ignores `.env.local`; keep the key on your own computer. If a facilitator provided test ETH, share only your **public wallet address** with them.
+3. Open that link in a browser. Check that it returns your JSON and that its `image` link opens the image. If you change and reupload the JSON, copy its **new** link; changing a local file cannot change an existing IPFS CID.
 
-### 6. Compile and deploy your contract
+## 5. Put the JSON link in the smart contract
 
-Run these commands from the repository root, replacing `METADATA_CID` with the CID from step 4:
+In VS Code, open [`contracts/NFTA.sol`](contracts/NFTA.sol). Find `TOKEN_URI` in `MyNFT` and replace the URL between the quotes with **your JSON gateway link from step 4**:
+
+```solidity
+string private constant TOKEN_URI = "https://moccasin-impressive-cougar-51.mypinata.cloud/ipfs/bafkreifgui54qw2qqcg3rlo3lojlpd7ofv5azrmbhmdqtnc5fjihat7snm";
+```
+
+That sample link is already in the starter contract. Replace it if you uploaded your own JSON. Do not put the image link here: `TOKEN_URI` must return the JSON metadata.
+
+You may also change the collection name and symbol in the constructor, for example `ERC721("MARSU1142026", "MAR")`. These are on-chain values; editing `name` or `symbol` in the JSON alone will not change them. Save `NFTA.sol`.
+
+## 6. Prepare a deployment wallet
+
+Deployment needs a funded **Base Sepolia test wallet**. In MetaMask, export that test account's private key privately. Never use a wallet that holds real assets, paste the key into chat, or commit it to Git.
+
+In the project root, create `.env.local` with:
+
+```text
+BASE_SEPOLIA_PRIVATE_KEY=0xYOUR_64_HEX_CHARACTER_TEST_PRIVATE_KEY
+```
+
+The key must start with `0x`. This repository ignores `.env.local`. Share only your **public wallet address** if someone is sending you test ETH.
+
+## 7. Compile and redeploy `MyNFT`
+
+To mint from your edited `contracts/NFTA.sol`, run these commands from the project root:
 
 ```bash
 npm run compile:contract
-npm run deploy:workshop -- ipfs://METADATA_CID
+npm run deploy:mynft
 ```
 
-The script checks that the RPC is Base Sepolia, submits the contract deployment, waits for confirmation, then prints a **contract address**. Copy that address, starting with `0x`. The printed BaseScan transaction link lets you check the deployment. If you need a different RPC, set `BASE_SEPOLIA_RPC_URL` in `.env.local` to a Base Sepolia endpoint.
+Compilation refreshes `contracts/NFTA.json`, which the deployment command and mint page both use. The deploy command checks the Base Sepolia network, sends a deployment transaction, and prints a **new contract address** beginning with `0x`. Copy it. You can open the printed BaseScan transaction link to confirm deployment. If the public RPC is unavailable, add `BASE_SEPOLIA_RPC_URL=YOUR_BASE_SEPOLIA_RPC_URL` to `.env.local` and rerun deployment.
 
-The contract stores the metadata URI at deployment. To use a different metadata CID later, deploy a new contract. Editing a local file will not change a deployed contract.
+Each edit to `TOKEN_URI` or the constructor requires compiling and deploying again. The new contract starts with its own token IDs and counter. Previously minted NFTs keep their original URI.
 
-### 7. Mint on the workshop page
+**Alternative: deploy `WorkshopNFT`.** Run `npm run deploy:workshop -- ipfs://METADATA_CID`, replacing `METADATA_CID` with the CID of your metadata JSON. This contract takes its URI from the command line, so you can skip editing `NFTA.sol`. Continue to step 8 using the address printed by this command.
 
-1. Add `NFT_CONTRACT_ADDRESS=0xYOUR_DEPLOYED_CONTRACT_ADDRESS` to `.env.local`, using the address printed in step 6. The page uses this contract when the server starts.
-2. Run `npm run dev` and open [http://localhost:3000](http://localhost:3000). Check the contract link on the page before minting.
-3. Click **Connect MetaMask**. Use the same funded test wallet and approve the Base Sepolia network switch if asked.
-4. Leave the counter at `1` for one NFT, or use `+`/`−` to change it. Each counter change is its own transaction and costs test ETH for gas. The counter is shared by everyone using your contract.
-5. Click **Mint**, review the MetaMask transaction, and confirm it. Open the transaction link shown on the page to see the confirmed mint on BaseScan.
+## 8. Point the mint page at the new contract
 
-Your contract has its own counter and NFTs. If your NFT image does not appear in a wallet immediately, first reopen the metadata file in Pinata and confirm its `image` CID is correct.
+Deploying a contract does not switch the mint page to it. In `.env.local`, add or replace `NFT_CONTRACT_ADDRESS` with the **contract address** printed in step 7:
 
-### What changed from the predecessor workshop
+```text
+NFT_CONTRACT_ADDRESS=0xYOUR_NEW_CONTRACT_ADDRESS
+```
 
-| Old step | Current project |
-| --- | --- |
-| Clone `RT7th/1026BB` | Clone this repository. |
-| Copy an existing NFT's JSON from a Solidity link | Create your own `metadata.json` and upload it after the image. |
-| Paste Pinata gateway links into code | Use `ipfs://IMAGE_CID` in JSON, then deploy with `ipfs://METADATA_CID`. |
-| Run `npx hardhat ... --network sepolia` | Run this project's `compile:contract` and `deploy:workshop` commands on **Base Sepolia**. |
-| Import ABI into `abi.ninja` to mint | Configure your contract in `.env.local`, then use this project's mint page. |
-
-References: [Pinata's file upload guide](https://pinata.cloud/blog/how-to-use-pinata-a-step-by-step-guide-for-beginners/), [Pinata's NFT metadata guide](https://knowledge.pinata.cloud/en/articles/5455523-nfts-and-pinata), and [Base Sepolia chain ID](https://docs.base.org/base-chain/api-reference/ethereum-json-rpc-api/eth_chainId).
-
-## Run locally
+Keep the private key line from step 6. Start the page, or restart it if it is already running so it reads the new address and compiled artifact:
 
 ```bash
-npm ci
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open or reload [http://localhost:3000](http://localhost:3000). **Before minting**, compare the **Contract** link below the Mint button with the address printed in step 7. If they differ, correct `NFT_CONTRACT_ADDRESS`, restart `npm run dev`, and reload the page.
 
-Connect MetaMask. The `+` and `−` buttons call `increment()` and `decrement()` on-chain, then **Mint** mints the displayed number of passes. Every action needs Base Sepolia test ETH for gas.
+## 9. Connect MetaMask and mint
 
-The [workshop contract](https://sepolia.basescan.org/address/0xd488d90944c04e69da124a02d3b513a208b8ed29) is the default across browsers. Set `NFT_CONTRACT_ADDRESS` in `.env.local` to use another deployed `WorkshopNFT` instead, then restart the server. `BASE_SEPOLIA_RPC_URL` optionally overrides the public Base Sepolia RPC used for backend checks.
+1. Click **Connect MetaMask** and approve the connection for your test account.
+2. If prompted, approve the switch to **Base Sepolia**. Confirm that this account has Base Sepolia test ETH.
+3. Leave the on-chain counter at `1` to mint one NFT. The `+` and `−` buttons change the shared counter from 1 to 10; **each click sends a separate transaction and costs test gas**.
+4. Click **Mint**, review the contract address and transaction in MetaMask, and confirm. The page shows a BaseScan transaction link. Wait for confirmation.
 
-The backend checks that the address contains either the original contract's or the participant contract's compiled code and simulates `mint(quantity)` before returning transaction data. MetaMask signs and broadcasts mint transactions; the server never handles a private key. The terminal deployment script reads a test-wallet key from the ignored `.env.local` file. Contract sources and artifacts are in `contracts/`. After editing Solidity source, run `npm run compile:contract` and redeploy; existing contracts cannot be updated in place.
+Every NFT minted from this `MyNFT` deployment uses the same JSON link in `TOKEN_URI`. If the image does not appear in a wallet immediately, open the JSON link and its `image` link directly to check the metadata. Wallets and marketplaces may take time to refresh images.
 
-The `counter` starts at 1, is shared across wallets, and is limited to 1–10 to match the mint quantity. Any wallet can change it or mint. There is no mint fee, though network gas still applies.
+## Quick checks
 
-## Optional Hardhat workflow for MyNFT
+| Problem | Check |
+| --- | --- |
+| JSON link shows the image or a dashboard page | Copy the **JSON file's** public gateway link from the second Pinata upload. |
+| Page says the workshop contract is unavailable | Run `npm run compile:contract`, check `NFT_CONTRACT_ADDRESS`, and restart `npm run dev`. Use the `deploy:mynft` command above for a contract the page can recognize. |
+| Deployment or mint fails for insufficient funds | Fund the same test wallet with **Base Sepolia ETH**. |
+| A new mint shows the old art | Compare the mint transaction’s **To** address on BaseScan with the address printed during deployment. If they differ, repeat step 8 before minting again. If they match, check the `image` field in the new metadata JSON. |
 
-Hardhat is already configured in this repository; do not run `hardhat init`. Hardhat 3 requires Node.js 22.13 or newer. To compile the contracts and test deployment on a simulated chain:
-
-```bash
-npx hardhat build
-npx hardhat run scripts/deploy.ts
-```
-
-To start a local JSON-RPC node, run `npx hardhat node` in a separate terminal. To deploy `MyNFT` to **Base Sepolia**, put `BASE_SEPOLIA_PRIVATE_KEY=0x...` in the ignored `.env.local` file, then run:
-
-```bash
-npx hardhat run scripts/deploy.ts --network baseSepolia
-```
-
-The network name is `baseSepolia`, not `sepolia`. `MyNFT` is a separate contract from the participant `WorkshopNFT` used by the mint page. For the page workflow, use `npm run deploy:workshop -- ipfs://METADATA_CID` as described above.
+References: [Pinata file upload guide](https://pinata.cloud/blog/how-to-use-pinata-a-step-by-step-guide-for-beginners/), [Pinata NFT metadata guide](https://knowledge.pinata.cloud/en/articles/5455523-nfts-and-pinata), and [Base Sepolia chain ID](https://docs.base.org/base-chain/api-reference/ethereum-json-rpc-api/eth_chainId).

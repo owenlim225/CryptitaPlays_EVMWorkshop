@@ -8,8 +8,10 @@ const abi = artifact.abi as Abi;
 const deployedCodeHashes = new Set([
   keccak256(artifact.deployedBytecode as `0x${string}`),
   keccak256(workshopArtifact.deployedBytecode as `0x${string}`),
+  // Hardhat embeds different compiler metadata than the solc artifact above.
+  "0xd852099e02b3b1046f45af44ae3ccb0b22fcc0775906cc4d5e9c5889d32ad085",
 ]);
-const defaultAddress = process.env.NFT_CONTRACT_ADDRESS || "0xd488d90944c04e69da124a02d3b513a208b8ed29";
+const defaultAddress = process.env.NFT_CONTRACT_ADDRESS || "0x36cb4a8feca8f54db6559273c9f2b1bed5eaca69";
 
 async function isCurrentContract(address: Address) {
   const code = await client.getBytecode({ address });

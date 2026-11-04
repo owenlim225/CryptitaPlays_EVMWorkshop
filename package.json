@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "compile:contract": "node scripts/compile-contract.mjs",
-    "deploy:workshop": "node --env-file=.env.local scripts/deploy-workshop.mjs"
+    "deploy:workshop": "node --env-file=.env.local scripts/deploy-contract.mjs",
+    "deploy:mynft": "node --env-file=.env.local scripts/deploy-contract.mjs mynft"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.6.1",

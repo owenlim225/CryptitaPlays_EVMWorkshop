@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 contract MyNFT is ERC721URIStorage {
     uint256 public tokenId;
     uint public counter = 1;
-    string private constant TOKEN_URI = "https://moccasin-impressive-cougar-51.mypinata.cloud/ipfs/bafkreifgui54qw2qqcg3rlo3lojlpd7ofv5azrmbhmdqtnc5fjihat7snm";
+    string private constant TOKEN_URI = "https://moccasin-impressive-cougar-51.mypinata.cloud/ipfs/bafkreiedamopyd7sty3lbsqlftmatotjfp46yxw4cdyq76pskmly4tvdyq";
 
     constructor() ERC721("Sherwaskjdakjsdinz", "SHER") {}
 
