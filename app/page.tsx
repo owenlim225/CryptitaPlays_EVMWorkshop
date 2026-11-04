@@ -259,8 +259,8 @@ export default function Home() {
 
         <section className="mint-page" aria-labelledby="page-title">
           <div className="intro">
-            <h1 id="page-title">Mint your workshop pass.</h1>
-            <p>Connect MetaMask, set the shared on-chain counter, and mint that many passes on Base Sepolia.</p>
+            <h1 id="page-title">Edit your contract. Deploy it. Mint your NFT.</h1>
+            <p>Edit your smart contract, deploy it on Base Sepolia, then connect MetaMask to mint an NFT to your wallet.</p>
             {account && chainId !== CHAIN_ID && <p className="network-note">MetaMask will ask you to switch to Base Sepolia.</p>}
           </div>
 

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Mint Pass | Cryptita Plays EVM Workshop",
-  description: "Connect MetaMask and mint a Cryptita Plays workshop pass on Base Sepolia.",
+  title: "Edit, Deploy, and Mint | Cryptita Plays EVM Workshop",
+  description: "Edit and deploy your NFT contract on Base Sepolia, then mint to your MetaMask wallet.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
